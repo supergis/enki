@@ -7,6 +7,7 @@ Unix entry point. See also enki.py
 
 import sys
 import os.path
+import logging
 
 """
 When script is executed from the source tree, it shall import enki package, which is one level higher.
@@ -16,5 +17,13 @@ sys.path.insert(0, os.path.join(sys.path[0], '..'))
 
 import enki.main
 
+logging.basicConfig(filename='/tmp/enki-cpuleak',
+                    level=logging.DEBUG,
+                    format='%(asctime)s %(message)s')
+
 if __name__ == '__main__':
-    sys.exit(enki.main.main())
+    logging.info('Pid {} enki started argv {} working dir {}'.format(os.getpid(), sys.argv, os.getcwd()))
+    res = enki.main.main()
+    logging.info('Pid {} exited'.format(os.getpid()))
+    print 'done'
+    sys.exit(res)
